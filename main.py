@@ -8,9 +8,16 @@ import matplotlib.pyplot as plt
 def imdb_scores_hist():
     title = pd.read_csv("titles.csv")
     print(title)
-    imdb_scores = title.loc[:, "imdb_score"]
-    print(imdb_scores)
-    plt.hist(imdb_scores, 50)
+    shows = title[title["type"] == 'SHOW']
+    print(shows.loc[:, "type"])
+    movies = title[title["type"] == 'MOVIE']
+    print(movies.loc[:, "type"])
+
+    figure, axes = plt.subplots(2)
+    imdb_scores = shows.loc[:, "imdb_score"]
+    axes[0].hist(imdb_scores, 50)
+    imdb_scores = movies.loc[:, "imdb_score"]
+    axes[1].hist(imdb_scores, 50)
     plt.show()
 
 imdb_scores_hist()
