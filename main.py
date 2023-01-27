@@ -53,6 +53,7 @@ def the_best_year():
     plt.show()
 
 
+# the_best_year()
 
     # number_of_good_scores = {}
     # number_of_scores = {}
@@ -81,4 +82,29 @@ def the_best_year():
     # plt.show()
 
 
-the_best_year()
+# Рейтинг акторів, що знімаються в гарних фільмах. Використавши дані обох таблиць,
+# візміть топ-1000 фільмів на платформі за рейтингом imdb, та наведіть топ-10 акторів за кількістю фільмів
+# серед цієї тисячі. - 1 бал;
+def best_actors():
+    titles = pd.read_csv("titles.csv")
+    credits_df = pd.read_csv("credits.csv")
+    credits_df = credits_df[credits_df["role"] == "ACTOR"]
+    titles = titles[titles["type"] == "MOVIE"]
+    sorted_titles = titles.sort_values("imdb_score")
+    sorted_titles = sorted_titles[~sorted_titles["imdb_score"].isna()]
+    first_thousand = sorted_titles[-1001:-1]
+    suitable_ids = sorted_titles["id"]
+    dictionary_with_actors = {}
+    for film_id in suitable_ids:
+        names_of_actors = credits_df[credits_df["id"] == film_id]["name"]
+        for name in names_of_actors:
+            if name in dictionary_with_actors:
+                dictionary_with_actors[name] += 1
+            else:
+                dictionary_with_actors[name] = 1
+    sorted_dictionary = {k: v for k, v in sorted(dictionary_with_actors.items(), key=lambda item: item[1], reverse=True)}
+    print(sorted_dictionary)
+
+
+
+best_actors()
