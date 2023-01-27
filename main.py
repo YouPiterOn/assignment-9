@@ -20,4 +20,15 @@ def imdb_scores_hist():
     axes[1].hist(imdb_scores, 50)
     plt.show()
 
-imdb_scores_hist()
+
+def age_certification_pie():
+    title = pd.read_csv("titles.csv")
+    shows = title[title["type"] == 'SHOW']
+    #shows = shows.loc[:, "age_certification"]
+    age_certification = shows.groupby(["age_certification"])["age_certification"].count()
+    print(age_certification)
+    plt.pie(age_certification, labels=age_certification.index.values.tolist())
+    plt.show()
+
+
+age_certification_pie()
