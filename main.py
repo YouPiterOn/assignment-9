@@ -36,42 +36,49 @@ def imdb_scores_hist():
 # більший за 8.0 в залежності від року (вісь x - роки, y - відсоток).
 # Назвіть найуспішніший рік - 1 бал;
 def the_best_year():
-    number_of_good_scores = {}
-    number_of_scores = {}
     title = pd.read_csv("titles.csv")
     title_starting_from_2000 = title[(~title["imdb_score"].isna()) & (title["release_year"] > 1999)]
-    good_scores = title_starting_from_2000[(title_starting_from_2000["imdb_score"] > 8.0)]
-    print(good_scores["imdb_score"])
-    print(title_starting_from_2000["imdb_score"])
     years = np.unique(title_starting_from_2000["release_year"])
+    list_with_scores = []
     for year in years:
-        number_of_good_scores[year] = 0
-        number_of_scores[year] = 0
-        for row_idx, row_obj in title_starting_from_2000.iterrows():
-            print(row_obj)
-            for row_good_idx, row_good_obj in good_scores.iterrows():
-                if row_obj == row_good_obj:
-                    number_of_good_scores[year] += 1
-            number_of_scores[year] += 1
-    list_with_percentage = []
-    for year in years:
-        percentage = number_of_good_scores[year] / number_of_scores[year]
-        list_with_percentage.append(percentage)
-    print(years)
-    print(list_with_percentage)
-    plt.plot(years, list_with_percentage)
+        number_of_scores = len(title_starting_from_2000[title_starting_from_2000["release_year"] == year])
+        number_of_good_scores = len(title_starting_from_2000[(title_starting_from_2000["imdb_score"] >= 8) & ( title_starting_from_2000["release_year"] == year)])
+        percentage = number_of_good_scores/ number_of_scores
+        list_with_scores.append(percentage)
+
+    index_with_best_percent = list_with_scores.index(max(list_with_scores))
+    year_with_best_percent = 2000 + index_with_best_percent
+    print(year_with_best_percent)
+    plt.plot(years, list_with_scores)
     plt.show()
 
 
 
-
-
-    #
-    # years = np.arange(title_starting_from_2000["release_year"])
-    # print(years)
+    # number_of_good_scores = {}
+    # number_of_scores = {}
+    # title = pd.read_csv("titles.csv")
+    # title_starting_from_2000 = title[(~title["imdb_score"].isna()) & (title["release_year"] > 1999)]
+    # good_scores = title_starting_from_2000[(title_starting_from_2000["imdb_score"] > 8.0)]
+    # print(good_scores["imdb_score"])
     # print(title_starting_from_2000["imdb_score"])
-    # # plt.plot(years, good)
-    # # plt.show()
+    # years = np.unique(title_starting_from_2000["release_year"])
+    # for year in years:
+    #     number_of_good_scores[year] = 0
+    #     number_of_scores[year] = 0
+    #     for row_idx, row_obj in title_starting_from_2000.iterrows():
+    #         print(row_obj)
+    #         for row_good_idx, row_good_obj in good_scores.iterrows():
+    #             if row_obj == row_good_obj:
+    #                 number_of_good_scores[year] += 1
+    #         number_of_scores[year] += 1
+    # list_with_percentage = []
+    # for year in years:
+    #     percentage = number_of_good_scores[year] / number_of_scores[year]
+    #     list_with_percentage.append(percentage)
+    # print(years)
+    # print(list_with_percentage)
+    # plt.plot(years, list_with_percentage)
+    # plt.show()
 
 
 the_best_year()
