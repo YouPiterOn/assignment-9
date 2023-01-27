@@ -103,7 +103,7 @@ def best_actors():
     sorted_titles = titles.sort_values("imdb_score")
     sorted_titles = sorted_titles[~sorted_titles["imdb_score"].isna()]
     first_thousand = sorted_titles[-1001:-1]
-    suitable_ids = sorted_titles["id"]
+    suitable_ids = first_thousand["id"]
     dictionary_with_actors = {}
     for film_id in suitable_ids:
         names_of_actors = credits_df[credits_df["id"] == film_id]["name"]
@@ -116,5 +116,25 @@ def best_actors():
     print(sorted_dictionary)
 
 
+def categories_bar():
+    titles = pd.read_csv("titles.csv")
+    credits_df = pd.read_csv("credits.csv")
+    credits_df = credits_df[credits_df["role"] == "ACTOR"]
+    titles = titles[titles["type"] == "MOVIE"]
+    sorted_titles = titles.sort_values("imdb_score")
+    sorted_titles = sorted_titles[~sorted_titles["imdb_score"].isna()]
+    first_thousand = sorted_titles[-1001:-1]
+    categories = {}
+    for i in first_thousand.loc[:,"genres"]:
+        i = i[2:-2]
+        i = i.split("', '")
+        for genre in i:
+            if genre in categories:
+                categories[genre] += 1
+            else:
+                categories[genre] = 1
+    df = pd.DataFrame(list(categories.items()))
+    plt.barh(df[0], df[1])
+    plt.show()
+categories_bar()
 
-best_actors()
